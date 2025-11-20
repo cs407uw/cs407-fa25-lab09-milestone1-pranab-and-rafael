@@ -1,5 +1,7 @@
 package com.cs407.lab09
 
+import kotlin.math.pow
+
 /**
  * Represents a ball that can move. (No Android UI imports!)
  *
@@ -24,6 +26,7 @@ class Ball(
 
     init {
         // TODO: Call reset()
+        reset()
     }
 
     /**
@@ -37,7 +40,21 @@ class Ball(
             accY = yAcc
             return
         }
+        // Calculate displacement using OLD velocity (Equation 2)
+        val deltaX = velocityX * dT + (1f/6f) * dT.pow(2) * (3 * accX + xAcc)
+        val deltaY = velocityY * dT + (1f/6f) * dT.pow(2) * (3 * accY + yAcc)
 
+        // Update velocity (Equation 1)
+        velocityX += 0.5f * (xAcc + accX) * dT
+        velocityY += 0.5f * (yAcc + accY) * dT
+
+        // Update position
+        posX += deltaX
+        posY += deltaY
+
+        // Store current acceleration for next iteration
+        accX = xAcc
+        accY = yAcc
     }
 
     /**
@@ -46,8 +63,30 @@ class Ball(
      * boundary should be set to 0.
      */
     fun checkBoundaries() {
-        // TODO: implement the checkBoundaries function
-        // (Check all 4 walls: left, right, top, bottom)
+        // Right Wall
+        if (posX > backgroundWidth - ballSize) {
+            posX = backgroundWidth - ballSize
+            velocityX = 0f
+            accX = 0f
+        }
+        // Left Wall
+        else if (posX < 0f) {
+            posX = 0f
+            velocityX = 0f
+            accX = 0f
+        }
+        // Bottom Wall
+        if (posY > backgroundHeight - ballSize) {
+            posY = backgroundHeight - ballSize
+            velocityY = 0f
+            accY = 0f
+        }
+        // Top Wall
+        else if (posY < 0f) {
+            posY = 0f
+            velocityY = 0f
+            accY = 0f
+        }
     }
 
     /**
@@ -55,7 +94,12 @@ class Ball(
      * velocity and acceleration.
      */
     fun reset() {
-        // TODO: implement the reset function
-        // (Reset posX, posY, velocityX, velocityY, accX, accY, isFirstUpdate)
+        posX = (backgroundWidth - ballSize) / 2f
+        posY = (backgroundHeight - ballSize) / 2f
+        velocityX = 0f
+        velocityY = 0f
+        accX = 0f
+        accY = 0f
+        isFirstUpdate = true
     }
 }
