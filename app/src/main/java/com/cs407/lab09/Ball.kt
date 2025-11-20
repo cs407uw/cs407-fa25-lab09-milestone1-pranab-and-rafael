@@ -25,7 +25,7 @@ class Ball(
     private var isFirstUpdate = true
 
     init {
-        // TODO: Call reset()
+        // Call reset()
         reset()
     }
 
@@ -82,7 +82,7 @@ class Ball(
             accY = 0f
         }
         // Top Wall
-        else if (posY < 0f) {
+        if (posY < 0f) {
             posY = 0f
             velocityY = 0f
             accY = 0f
